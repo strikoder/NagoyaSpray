@@ -94,7 +94,7 @@ python3 nagoyaspray.py --seasons --start 2024 --end 2024 -b "!" -o passwords.txt
 
 ## Shoutout
 
-Props to [spraygen](https://github.com/3ndG4me/spraygen) for inspiration. This is basically the diet version - same idea, way less calories.
+Props to [spraygen](https://github.com/3ndG4me/spraygen) for inspiration. This is basically the diet version - same idea, way less calories. Key differences: we capitalize words and let you add special characters at the start, end, or both. The thing you actually need for a CTF/exam environment.
 
 ---
 
