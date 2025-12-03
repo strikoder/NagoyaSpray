@@ -21,26 +21,26 @@ BANNER = """
 ║              ███████║██║     ██║  ██║██║  ██║   ██║           ║
 ║              ╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝           ║
 ║                                                               ║
-║                Developed by Strikoder | v1.0                  ║
+║                Developed by Strikoder | v1.1                  ║
 ║          Lightweight Wordlist Generator for Pentesting        ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 """
 
-# Base word lists
+# Base word lists (all lowercase)
 MONTHS = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "january", "february", "march", "april", "may", "june",
+    "july", "august", "september", "october", "november", "december"
 ]
 
-SEASONS = ["Winter", "Spring", "Summer", "Autumn", "Fall"]
+SEASONS = ["winter", "spring", "summer", "autumn", "fall"]
 
 DAYS = [
-    "Monday", "Tuesday", "Wednesday", "Thursday", 
-    "Friday", "Saturday", "Sunday"
+    "monday", "tuesday", "wednesday", "thursday", 
+    "friday", "saturday", "sunday"
 ]
 
-COMMON = ["Welcome", "Password", "Company", "Access"]
+COMMON = ["welcome", "password", "company", "access"]
 
 
 def capitalize_first_only(word):
@@ -51,7 +51,7 @@ def capitalize_last_only(word):
     return word[:-1].lower() + word[-1].upper() if word else word
 
 
-def generate_passwords(word_lists, years, attributes, position, cap_mode):
+def generate_passwords(word_lists, years, attributes, position, cap_mode, min_length, max_length):
     passwords = set()
     
     # Combine all selected word lists
@@ -72,32 +72,54 @@ def generate_passwords(word_lists, years, attributes, position, cap_mode):
                 # Base combination: word + year
                 base = f"{word}{y}"
                 
-                # Apply capitalization
+                # Apply capitalization (default is 'first')
                 if cap_mode == 'first':
                     base = capitalize_first_only(base)
                 elif cap_mode == 'last':
                     base = capitalize_last_only(base)
-                elif cap_mode == 'normal':
-                    base = base.capitalize()
+                elif cap_mode == 'lower':
+                    base = base.lower()
+                elif cap_mode == 'upper':
+                    base = base.upper()
                 elif cap_mode == 'all':
                     # Add multiple variations
-                    passwords.add(base.lower())
-                    passwords.add(base.upper())
-                    passwords.add(base.capitalize())
-                    passwords.add(capitalize_first_only(base))
+                    variations = [
+                        base.lower(),
+                        base.upper(),
+                        capitalize_first_only(base),
+                        capitalize_last_only(base)
+                    ]
+                    for var in variations:
+                        # Add with attributes
+                        for attr in attributes:
+                            if attr == '':
+                                candidate = var
+                            elif position == 'p':
+                                candidate = f"{attr}{var}"
+                            elif position == 's':
+                                candidate = f"{var}{attr}"
+                            elif position == 'b':
+                                candidate = f"{attr}{var}{attr}"
+                            
+                            # Check length constraints
+                            if min_length <= len(candidate) <= max_length:
+                                passwords.add(candidate)
                     continue
                 
                 # Add with attributes based on position
                 for attr in attributes:
                     if attr == '':
-                        # No attribute, just add base
-                        passwords.add(base)
-                    elif position == 'p':  # prefix (start)
-                        passwords.add(f"{attr}{base}")
-                    elif position == 's':  # suffix (end)
-                        passwords.add(f"{base}{attr}")
-                    elif position == 'b':  # both
-                        passwords.add(f"{attr}{base}{attr}")
+                        candidate = base
+                    elif position == 'p':
+                        candidate = f"{attr}{base}"
+                    elif position == 's':
+                        candidate = f"{base}{attr}"
+                    elif position == 'b':
+                        candidate = f"{attr}{base}{attr}"
+                    
+                    # Check length constraints
+                    if min_length <= len(candidate) <= max_length:
+                        passwords.add(candidate)
     
     return sorted(passwords)
 
@@ -105,7 +127,7 @@ def generate_passwords(word_lists, years, attributes, position, cap_mode):
 def main():
     parser = argparse.ArgumentParser(
         description='Simple Password Spray List Generator',
-        epilog='\nExample: python3 spray.py --seasons --months --start 2020 --end 2025 -p "!" -o passwords.txt'
+        epilog='\nExample: python3 nagoyaspray.py --seasons --months --start 2020 --end 2025 -s "!" -o passwords.txt'
     )
     
     # Word list selection
@@ -128,12 +150,16 @@ def main():
     parser.add_argument('-b', '--both-attr', type=str, default='',
                        help='Comma-separated attributes to add at BOTH start and end (e.g., "!")')
     
-    # Position (hidden, determined by which flag is used)
+    # Length constraints
+    parser.add_argument('--min', type=int, default=1, 
+                       help='Minimum password length (default: 1)')
+    parser.add_argument('--max', type=int, default=100, 
+                       help='Maximum password length (default: 100)')
     
     # Capitalization
-    parser.add_argument('--cap', choices=['first', 'last', 'normal', 'all'], 
-                       default='normal',
-                       help='Capitalization mode (default: normal)')
+    parser.add_argument('--cap', choices=['first', 'last', 'lower', 'upper', 'all'], 
+                       default='first',
+                       help='Capitalization mode: first=First letter capitalized (default), lower=all lowercase, upper=all uppercase, last=last letter capitalized, all=all variations')
     
     # Output
     parser.add_argument('-o', '--output', type=str, help='Output file (required unless --print is used)')
@@ -147,7 +173,12 @@ def main():
     # Validate output requirement
     if not args.print and not args.output:
         print("[!] Error: Output file required (-o) unless --print is specified")
-        print("\nExample: python3 spray.py --seasons --months --start 2020 --end 2025 -s \"!\" -o passwords.txt")
+        print("\nExample: python3 nagoyaspray.py --seasons --months --start 2020 --end 2025 -s \"!\" -o passwords.txt")
+        return
+    
+    # Validate length constraints
+    if args.min > args.max:
+        print("[!] Error: Minimum length cannot be greater than maximum length")
         return
     
     # Set default years
@@ -171,7 +202,7 @@ def main():
     
     # Add custom words
     if args.words:
-        custom_words = [w.strip() for w in args.words.split(',')]
+        custom_words = [w.strip().lower() for w in args.words.split(',')]
         word_lists.append(custom_words)
     
     if not word_lists:
@@ -200,6 +231,7 @@ def main():
     print(f"[*] Attributes: {attributes if attributes != [''] else 'None'}")
     print(f"[*] Position: {'PREFIX (start)' if position == 'p' else 'SUFFIX (end)' if position == 's' else 'BOTH'}")
     print(f"[*] Capitalization: {args.cap}")
+    print(f"[*] Length range: {args.min}-{args.max}")
     
     # Generate passwords
     passwords = generate_passwords(
@@ -207,7 +239,9 @@ def main():
         years=(year_start, year_end),
         attributes=attributes,
         position=position,
-        cap_mode=args.cap
+        cap_mode=args.cap,
+        min_length=args.min,
+        max_length=args.max
     )
     
     print(f"[+] Generated {len(passwords)} unique passwords")
