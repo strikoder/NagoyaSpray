@@ -1,5 +1,5 @@
 # NagoyaSpray
-![nagoya](https://github.com/strikoder/NagoyaSpray/blob/main/Nagoya.jpeg)
+![Nagoya](https://github.com/user-attachments/assets/48f182a9-abb8-4edf-ad71-e2005f19b111)
 
 ## The Problem
 You're mid-exam - OSCP, PNPT, CPTS, whatever - and you need to spray some passwords. Clock's ticking. Your options suck:
@@ -37,7 +37,8 @@ python3 nagoyaspray.py -h
 ```
 
 ## Usage
-![nagoyaspray.py](https://github.com/strikoder/NagoyaSpray/blob/main/nagoyaspray.gif)
+![nagoyaspray.py](https://github.com/user-attachments/assets/259dcf00-e1bb-47d5-8ca1-f631320e8ddc)
+
 
 ```bash
 # No arguments? See the help
