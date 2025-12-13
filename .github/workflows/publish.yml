@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nagoyaspray"
+version = "1.1.0"
+requires-python = ">=3.6"
+authors = [
+    {name = "strikoder", email = "your.email@example.com"}
+]
+description = "CTF-focused password spray wordlist generator for OSCP/PNPT/CPTS"
+readme = "README.md"
+keywords = ["password-spray", "wordlist-generator", "oscp", "pentesting", "ctf", "active-directory", "pnpt", "cpts"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Information Technology",
+    "Topic :: Security",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/strikoder/NagoyaSpray"
+Repository = "https://github.com/strikoder/NagoyaSpray"
+Issues = "https://github.com/strikoder/NagoyaSpray/issues"
+
+[project.scripts]
+nagoyaspray = "nagoyaspray:main"
+
+[tool.setuptools]
+py-modules = ["nagoyaspray"]
