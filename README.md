@@ -1,5 +1,7 @@
 # NagoyaSpray
-![Nagoya](https://github.com/user-attachments/assets/48f182a9-abb8-4edf-ad71-e2005f19b111)
+
+![NagoyaSpray](https://github.com/user-attachments/assets/4e727676-aa68-48b7-b8f7-8c7e0c99d7f3)
+
 
 ## The Problem
 You're mid-exam - OSCP, PNPT, CPTS, whatever - and you need to spray some passwords. Clock's ticking. Your options suck:
