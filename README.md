@@ -1,7 +1,6 @@
 # NagoyaSpray
 
-<img width="872" height="1216" alt="NagoyaSpray" src="https://github.com/user-attachments/assets/4460a360-5a76-48d7-9612-c2656766654c" />
-
+<img width="436" height="608" alt="NagoyaSpray" src="https://github.com/user-attachments/assets/9968d81e-63b1-402c-96cf-b89faa87cd33" />
 
 ## The Problem
 You're mid-exam - OSCP, PNPT, CPTS, whatever - and you need to spray some passwords. Clock's ticking. Your options suck:
