@@ -1,6 +1,6 @@
 # NagoyaSpray
 
-![NagoyaSpray](https://github.com/user-attachments/assets/4e727676-aa68-48b7-b8f7-8c7e0c99d7f3)
+<img width="872" height="1216" alt="NagoyaSpray" src="https://github.com/user-attachments/assets/4460a360-5a76-48d7-9612-c2656766654c" />
 
 
 ## The Problem
